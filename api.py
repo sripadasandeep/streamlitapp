@@ -34,7 +34,7 @@ if image_source == "Capture from Webcam":
     
     # Use st.button() to trigger image capture
     if st.button("Capture Image"):
-        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
         cap.release()
 
