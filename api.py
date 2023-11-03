@@ -8,21 +8,24 @@ import json
 
 
 def testingfunc(base64_string):
-    # base64_string = 
-    # Convert the Base64 string to binary data
-    binary_data = base64.b64decode(base64_string)
-    url = 'http://164.52.201.54:18080/verify_liveness'
-    headers = {
-        "Content-Type": "image/jpeg",  
-    }
-    r = requests.post(url,data=binary_data, headers=headers)
-    json_object = json.loads(r.text)
-    print(json_object)
-    return json_object
-
+    try:
+        # base64_string = 
+        # Convert the Base64 string to binary data
+        binary_data = base64.b64decode(base64_string)
+        url = 'http://164.52.201.54:18080/verify_liveness'
+        headers = {
+            "Content-Type": "image/jpeg",  
+        }
+        r = requests.post(url,data=binary_data, headers=headers)
+        json_object = json.loads(r.text)
+        # print("json_object:",json_object)
+        return json_object
+    except Exception as e:
+        print(f"requesting backend api issue:{e}")
+        return {"error":"backend api requesting error."}
 
 # Set a title for the Streamlit app
-st.title("Image Capture and Upload App")
+st.title("FaceLiveness Testing App")
 
 # Create a sidebar selection for image source
 image_source = st.sidebar.selectbox("Select Image Source", ("Capture from Webcam", "Upload from Local"))
@@ -66,10 +69,10 @@ if image_source == "Capture from Webcam":
         bytes_data = img_file_buffer.getvalue()
         # st.write(type(bytes_data))
         image_base64 = base64.b64encode(bytes_data).decode()
-        st.write("Photo captured and waiting for respone...")
+        st.write("Photo captured Successfully and waiting for response...")
         response = testingfunc(image_base64)
         # print(response)
-        st.write(response)   
+        st.write(response)
         
 else:
     # Upload an image from the local system
@@ -77,22 +80,23 @@ else:
     
     # Create a file uploader widget
     uploaded_image = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
-    print(f"uploaded_image:{uploaded_image}")
+    # print(f"uploaded_image:{uploaded_image}")
     if uploaded_image is not None:
         # Display the uploaded image
         image = Image.open(uploaded_image)
+        print(type(image))
+        print(image)
         st.image(image, caption="Uploaded Image", use_column_width=True)
         image_bytes = io.BytesIO()
-        image.save(image_bytes, format="JPEG")
+        image.save(image_bytes, format="PNG")
         image_bytes = image_bytes.getvalue()
 
         # Encode bytes in base64
         image_base64 = base64.b64encode(image_bytes).decode()
 
         response = testingfunc(image_base64)
-        print(response)
+        # print(response)
         st.write(response)
-    else:
-        pass   
+    
     
 # Run the Streamlit app
