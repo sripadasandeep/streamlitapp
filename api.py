@@ -6,6 +6,7 @@ import cv2
 import requests
 import json
 
+
 def testingfunc(base64_string):
     # base64_string = 
     # Convert the Base64 string to binary data
@@ -29,66 +30,47 @@ image_source = st.sidebar.selectbox("Select Image Source", ("Capture from Webcam
 if image_source == "Capture from Webcam":
     st.subheader("Webcam Capture")
     
-    # Use st.empty() to create a placeholder for the webcam image
-    webcam_image_placeholder = st.empty()
+    # # Use st.empty() to create a placeholder for the webcam image
+    # webcam_image_placeholder = st.empty()
     
-    # Use st.button() to trigger image capture
-    if st.button("Capture Image"):
-        cap = cv2.VideoCapture(0)
-        ret, frame = cap.read()
-        cap.release()
+    # # Use st.button() to trigger image capture
+    # if st.button("Capture Image"):
+    #     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    #     ret, frame = cap.read()
+    #     cap.release()
 
-        # Save the captured image to a file
-        if ret:
-            cv2.imwrite("captured_image.jpg", frame)
-            st.write("Image captured and waiting for response...")
-        # Open and display the captured image
-        captured_image = Image.open("captured_image.jpg")
-        webcam_image_placeholder.image(captured_image, caption="Captured Image", use_column_width=True)
-        # Open the image file
-        with open("captured_image.jpg", "rb") as image_file:
-            # Read the binary data of the image
-            image_binary = image_file.read()
+    #     # Save the captured image to a file
+    #     if ret:
+    #         cv2.imwrite("captured_image.jpg", frame)
+    #         st.write("Image captured and saved as 'captured_image.jpg'")
+    #     # Open and display the captured image
+    #     captured_image = Image.open("captured_image.jpg")
+    #     webcam_image_placeholder.image(captured_image, caption="Captured Image", use_column_width=True)
+    #     # Open the image file
+    #     with open("captured_image.jpg", "rb") as image_file:
+    #         # Read the binary data of the image
+    #         image_binary = image_file.read()
 
-        # Encode the binary data as base64
-        image_base64 = base64.b64encode(image_binary).decode()
+    #     # Encode the binary data as base64
+    #     image_base64 = base64.b64encode(image_binary).decode()
 
-        response = testingfunc(image_base64)
-        print(response)
-        st.write(response)
-
-        # if st.button("re capture"):
-        #     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-        #     ret, frame = cap.read()
-        #     cap.release()
-
-        #     # Save the captured image to a file
-        #     if ret:
-        #         cv2.imwrite("captured_image.jpg", frame)
-        #         st.write("Image captured and saved as 'captured_image.jpg'")
-        #     # Open and display the captured image
-        #     captured_image = Image.open("captured_image.jpg")
-        #     webcam_image_placeholder.image(captured_image, caption="Captured Image", use_column_width=True)
-        # if st.button("test"):
-        #     # Open the image file
-        #     with open("captured_image.jpg", "rb") as image_file:
-        #         # Read the binary data of the image
-        #         image_binary = image_file.read()
-
-        #     # Encode the binary data as base64
-        #     image_base64 = base64.b64encode(image_binary).decode()
-
-        #     response = testingfunc(image_base64)
-        #     print(response)
-        #     st.write(response)
+    #     response = testingfunc(image_base64)
+    #     print(response)
+    #     st.write(response)
         
-        # # You can use libraries like OpenCV to capture an image from the webcam
-        # # Replace the following code with your image capture logic
-        # # You should capture a single frame as an image
-        # captured_image = Image.open("path_to_captured_image.jpg")
-        # # Display the captured image
-        # webcam_image_placeholder.image(captured_image, caption="Captured Image", use_column_width=True)
 
+    img_file_buffer = st.camera_input("Take a picture")
+
+    if img_file_buffer is not None:
+        # To read image file buffer as bytes:
+        bytes_data = img_file_buffer.getvalue()
+        # st.write(type(bytes_data))
+        image_base64 = base64.b64encode(bytes_data).decode()
+        st.write("Photo captured and waiting for respone...")
+        response = testingfunc(image_base64)
+        # print(response)
+        st.write(response)   
+        
 else:
     # Upload an image from the local system
     st.subheader("Upload Image")
