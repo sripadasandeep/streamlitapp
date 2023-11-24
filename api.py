@@ -12,7 +12,7 @@ def testingfunc(base64_string):
         # base64_string = 
         # Convert the Base64 string to binary data
         binary_data = base64.b64decode(base64_string)
-        url = 'http://164.52.201.54:18080/verify_liveness'
+        url = 'http://65.2.179.211:8080/receive_image'
         headers = {
             "Content-Type": "image/jpeg",  
         }
